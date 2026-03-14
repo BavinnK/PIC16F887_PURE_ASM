@@ -1,0 +1,23 @@
+    PROCESSOR 16F887
+    #include <p16f887.inc>
+
+
+ __CONFIG _CONFIG1, _INTRC_OSC_NOCLKOUT & _WDT_OFF & _LVP_OFF & _MCLRE_ON
+ __CONFIG _CONFIG2, _BOR4V_BOR40V & _WRT_OFF
+
+;RESET VECTOR
+    ORG     0x00
+    GOTO    MAIN_INIT
+;INTERRUPT VECTOR
+    ORG	    0x04
+    RETFIE
+;MAIN CODE
+    ORG     0x05         
+MAIN_INIT:
+    
+MAIN_LOOP:
+   
+    GOTO    MAIN_LOOP
+
+
+    END
