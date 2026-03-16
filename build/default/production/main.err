@@ -1,0 +1,11 @@
+Warning[205] C:\USERS\BAVIN\MPLABXPROJECTS\CC_16F887_ASM.X\MAIN.ASM 7 : Found directive in column 1. (CBLOCK)
+Message[302] C:\USERS\BAVIN\MPLABXPROJECTS\CC_16F887_ASM.X\MAIN.ASM 47 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\BAVIN\MPLABXPROJECTS\CC_16F887_ASM.X\MAIN.ASM 50 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\BAVIN\MPLABXPROJECTS\CC_16F887_ASM.X\MAIN.ASM 51 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\BAVIN\MPLABXPROJECTS\CC_16F887_ASM.X\MAIN.ASM 54 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\BAVIN\MPLABXPROJECTS\CC_16F887_ASM.X\MAIN.ASM 57 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\BAVIN\MPLABXPROJECTS\CC_16F887_ASM.X\MAIN.ASM 58 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\BAVIN\MPLABXPROJECTS\CC_16F887_ASM.X\MAIN.ASM 59 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\BAVIN\MPLABXPROJECTS\CC_16F887_ASM.X\MAIN.ASM 60 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\BAVIN\MPLABXPROJECTS\CC_16F887_ASM.X\MAIN.ASM 61 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[205] C:\USERS\BAVIN\MPLABXPROJECTS\CC_16F887_ASM.X\MAIN.ASM 73 : Found directive in column 1. (END)
