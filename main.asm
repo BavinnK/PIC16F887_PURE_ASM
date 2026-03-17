@@ -22,15 +22,27 @@ CBLOCK 0x70
     
     BCF INTCON,2    ;CLR OVF FLAG MANUALLY
     INCF COUNTvar,F
-    MOVLW d'10'
-    SUBWF COUNTvar,W
-    BTFSS STATUS,2
+    MOVF COUNTvar,W
+   
+    CALL LED_PATTERN
+    
+    MOVWF PORTD
+    
     GOTO ISR_EXIT
     
-    MOVLW b'00010000'
-    BANKSEL PORTD   ;INCASE THE BANKS WAS CHANGED
-    CLRF COUNTvar
-    XORWF PORTD,F
+LED_PATTERN:
+    ANDLW 0x7	    ;so we will and the data in W reg with number 7 so the led would be between 0-7
+    ADDWF PCL,F	    ;then we will add PCL AND Wreg data so depending on the data in Wreg the PCL will jump to one of the patterns
+    RETLW b'00000001'	;if W is 0
+    RETLW b'00000010'	;if W is 1
+    RETLW b'00000100'	;if W is 2
+    RETLW b'00001000'	;if W is 3
+    RETLW b'00010000'	;if W is 4
+    RETLW b'00100000'	;if W is 5
+    RETLW b'01000000'	;if W is 6
+    RETLW b'10000000'	;if W is 7
+    
+    
     
 ISR_EXIT:
     SWAPF S_TEMP,W
@@ -51,7 +63,7 @@ MAIN_INIT:
     CLRF ANSELH
     
     BANKSEL TRISD   ;BANK1
-    BCF TRISD,4	    ;SET RD4 TO OUTPUT
+    CLRF TRISD
     
     ;timer0 setup
     BCF OPTION_REG,5
