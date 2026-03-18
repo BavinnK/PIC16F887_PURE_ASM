@@ -1,13 +1,13 @@
 MPLINK 5.08, LINKER
-Linker Map File - Created Wed Mar 18 00:00:32 2026
+Linker Map File - Created Wed Mar 18 16:42:38 2026
 
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
                 ---------  ---------  ---------  ---------  ---------
                    .org_0       code   0x000000    program   0x000002
                    .cinit    romdata   0x000001    program   0x000004
-                   .org_1       code   0x000004    program   0x000030
-                   .org_2       code   0x000050    program   0x000030
+                   .org_1       code   0x000004    program   0x00003c
+                   .org_2       code   0x000060    program   0x000032
 .config_2007_BUILD/DEFAULT/PRODUCTION/MAIN.O       code   0x002007    program   0x000002
 .config_2008_BUILD/DEFAULT/PRODUCTION/MAIN.O       code   0x002008    program   0x000002
 
@@ -17,29 +17,29 @@ Linker Map File - Created Wed Mar 18 00:00:32 2026
                                Start         End      
                            ---------   ---------      
                             0x000000    0x000002      
-                            0x000004    0x00001b      
-                            0x000050    0x000067      
+                            0x000004    0x000021      
+                            0x000060    0x000078      
                             0x002007    0x002008      
-            53 out of 8455 program addresses used, program memory utilization is 0%
+            60 out of 8455 program addresses used, program memory utilization is 0%
 
 
 
                               Symbols - Sorted by Name
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
-                 ISR_EXIT   0x000017    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
-              LED_PATTERN   0x00000d    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
-                MAIN_INIT   0x000050    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
-                MAIN_LOOP   0x000067    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
+                 ISR_EXIT   0x00001d    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
+              LED_PATTERN   0x000013    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
+                MAIN_INIT   0x000060    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
+                MAIN_LOOP   0x000078    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
 
 
 
                               Symbols - Sorted by Address
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
-              LED_PATTERN   0x00000d    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
-                 ISR_EXIT   0x000017    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
-                MAIN_INIT   0x000050    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
-                MAIN_LOOP   0x000067    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
+              LED_PATTERN   0x000013    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
+                 ISR_EXIT   0x00001d    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
+                MAIN_INIT   0x000060    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
+                MAIN_LOOP   0x000078    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
 
 

@@ -2,12 +2,13 @@
     #include <p16f887.inc>
 
 
- __CONFIG _CONFIG1, _INTRC_OSC_NOCLKOUT & _WDT_OFF & _LVP_OFF & _MCLRE_ON
- __CONFIG _CONFIG2, _BOR4V_BOR40V & _WRT_OFF
+__CONFIG _CONFIG1, _INTRC_OSC_NOCLKOUT & _WDT_OFF & _LVP_OFF & _MCLRE_ON & _PWRTE_ON
+__CONFIG _CONFIG2, _BOR4V_BOR40V & _WRT_OFF
 CBLOCK 0x70
     W_TEMP	;0x70 addr
     S_TEMP	;0x71 addr
     COUNTvar	;0x72 addr
+    LED_POS	;0x73 addr
  ENDC
 ;RESET VECTOR
     ORG     0x00
@@ -22,14 +23,17 @@ CBLOCK 0x70
     
     BCF INTCON,2    ;CLR OVF FLAG MANUALLY
     INCF COUNTvar,F
-    MOVF COUNTvar,W
-   
-    CALL LED_PATTERN
-    
-    MOVWF PORTD
-    
+    MOVLW 2
+    SUBWF COUNTvar,W
+    BTFSS STATUS,2
     GOTO ISR_EXIT
-    
+    CLRF COUNTvar
+    INCF LED_POS,F
+    MOVF LED_POS,W
+    CALL LED_PATTERN
+    MOVWF PORTD
+    GOTO ISR_EXIT
+
 LED_PATTERN:
     ANDLW 0x7	    ;so we will and the data in W reg with number 7 so the led would be between 0-7
     ADDWF PCL,F	    ;then we will add PCL AND Wreg data so depending on the data in Wreg the PCL will jump to one of the patterns
@@ -52,7 +56,7 @@ ISR_EXIT:
     RETFIE
    
 ;MAIN CODE
-      org 0x50      
+      org 0x60      
 MAIN_INIT:
     BANKSEL OSCCON
     MOVLW b'01100111'
@@ -79,6 +83,7 @@ MAIN_INIT:
     CLRF TMR0
     CLRF COUNTvar   ;we will use this address to save the OVF
     CLRF PORTD
+    CLRF LED_POS
 MAIN_LOOP:
     
     GOTO    MAIN_LOOP

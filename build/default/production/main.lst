@@ -1,4 +1,4 @@
-MPASM 5.68                          MAIN.ASM   3-18-2026  0:00:31         PAGE  1
+MPASM 5.68                          MAIN.ASM   3-18-2026  16:42:37         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -18,112 +18,119 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00810         LIST
                       00003 
                       00004 
-2007   2FF4           00005  __CONFIG _CONFIG1, _INTRC_OSC_NOCLKOUT & _WDT_OFF & _LVP_OFF & _MCLRE_ON
-2008   3FFF           00006  __CONFIG _CONFIG2, _BOR4V_BOR40V & _WRT_OFF
+Warning[205]: Found directive in column 1. (__CONFIG)
+2007   2FE4           00005 __CONFIG _CONFIG1, _INTRC_OSC_NOCLKOUT & _WDT_OFF & _LVP_OFF & _MCLRE_ON & _PWRTE_ON
+Warning[205]: Found directive in column 1. (__CONFIG)
+2008   3FFF           00006 __CONFIG _CONFIG2, _BOR4V_BOR40V & _WRT_OFF
 Warning[205]: Found directive in column 1. (CBLOCK)
                       00007 CBLOCK 0x70
   00000070            00008     W_TEMP      ;0x70 addr
   00000071            00009     S_TEMP      ;0x71 addr
   00000072            00010     COUNTvar    ;0x72 addr
-                      00011  ENDC
-                      00012 ;RESET VECTOR
-                      00013     ORG     0x00
-0000   2???           00014     GOTO    MAIN_INIT
-                      00015 ;INTERRUPT VECTOR
-                      00016     ORG     0x04
-                      00017     ;SWAPPING THE STATUS AND WROKING REGISTERS
-0004   00F0           00018     MOVWF W_TEMP
-0005   0E03           00019     SWAPF STATUS,W
-0006   00F1           00020     MOVWF S_TEMP
-                      00021     ;DONE WITH SWAP
-                      00022     
-0007   110B           00023     BCF INTCON,2    ;CLR OVF FLAG MANUALLY
-0008   0AF2           00024     INCF COUNTvar,F
-0009   0872           00025     MOVF COUNTvar,W
-                      00026    
-000A   2???           00027     CALL LED_PATTERN
-                      00028     
-000B   0088           00029     MOVWF PORTD
-                      00030     
-000C   2???           00031     GOTO ISR_EXIT
-                      00032     
-000D                  00033 LED_PATTERN:
-000D   3907           00034     ANDLW 0x7       ;so we will and the data in W reg with number 7 so the led would be between 0-7
-000E   0782           00035     ADDWF PCL,F     ;then we will add PCL AND Wreg data so depending on the data in Wreg the PCL will ju
+  00000073            00011     LED_POS     ;0x73 addr
+                      00012  ENDC
+                      00013 ;RESET VECTOR
+                      00014     ORG     0x00
+0000   2???           00015     GOTO    MAIN_INIT
+                      00016 ;INTERRUPT VECTOR
+                      00017     ORG     0x04
+                      00018     ;SWAPPING THE STATUS AND WROKING REGISTERS
+0004   00F0           00019     MOVWF W_TEMP
+0005   0E03           00020     SWAPF STATUS,W
+0006   00F1           00021     MOVWF S_TEMP
+                      00022     ;DONE WITH SWAP
+                      00023     
+0007   110B           00024     BCF INTCON,2    ;CLR OVF FLAG MANUALLY
+0008   0AF2           00025     INCF COUNTvar,F
+0009   3002           00026     MOVLW 2
+000A   0272           00027     SUBWF COUNTvar,W
+000B   1D03           00028     BTFSS STATUS,2
+000C   2???           00029     GOTO ISR_EXIT
+000D   01F2           00030     CLRF COUNTvar
+000E   0AF3           00031     INCF LED_POS,F
+000F   0873           00032     MOVF LED_POS,W
+0010   2???           00033     CALL LED_PATTERN
+0011   0088           00034     MOVWF PORTD
+0012   2???           00035     GOTO ISR_EXIT
+                      00036 
+0013                  00037 LED_PATTERN:
+0013   3907           00038     ANDLW 0x7       ;so we will and the data in W reg with number 7 so the led would be between 0-7
+0014   0782           00039     ADDWF PCL,F     ;then we will add PCL AND Wreg data so depending on the data in Wreg the PCL will ju
                             mp to one of the patterns
-000F   3401           00036     RETLW b'00000001'   ;if W is 0
-0010   3402           00037     RETLW b'00000010'   ;if W is 1
-0011   3404           00038     RETLW b'00000100'   ;if W is 2
-0012   3408           00039     RETLW b'00001000'   ;if W is 3
-0013   3410           00040     RETLW b'00010000'   ;if W is 4
-0014   3420           00041     RETLW b'00100000'   ;if W is 5
-MPASM 5.68                          MAIN.ASM   3-18-2026  0:00:31         PAGE  2
+MPASM 5.68                          MAIN.ASM   3-18-2026  16:42:37         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0015   3440           00042     RETLW b'01000000'   ;if W is 6
-0016   3480           00043     RETLW b'10000000'   ;if W is 7
-                      00044     
-                      00045     
-                      00046     
-0017                  00047 ISR_EXIT:
-0017   0E71           00048     SWAPF S_TEMP,W
-0018   0083           00049     MOVWF STATUS
-0019   0EF0           00050     SWAPF W_TEMP,F
-001A   0E70           00051     SWAPF W_TEMP,W
-001B   0009           00052     RETFIE
-                      00053    
-                      00054 ;MAIN CODE
-                      00055       org 0x50      
-0050                  00056 MAIN_INIT:
-0050   1683 1303      00057     BANKSEL OSCCON
-0052   3067           00058     MOVLW b'01100111'
+0015   3401           00040     RETLW b'00000001'   ;if W is 0
+0016   3402           00041     RETLW b'00000010'   ;if W is 1
+0017   3404           00042     RETLW b'00000100'   ;if W is 2
+0018   3408           00043     RETLW b'00001000'   ;if W is 3
+0019   3410           00044     RETLW b'00010000'   ;if W is 4
+001A   3420           00045     RETLW b'00100000'   ;if W is 5
+001B   3440           00046     RETLW b'01000000'   ;if W is 6
+001C   3480           00047     RETLW b'10000000'   ;if W is 7
+                      00048     
+                      00049     
+                      00050     
+001D                  00051 ISR_EXIT:
+001D   0E71           00052     SWAPF S_TEMP,W
+001E   0083           00053     MOVWF STATUS
+001F   0EF0           00054     SWAPF W_TEMP,F
+0020   0E70           00055     SWAPF W_TEMP,W
+0021   0009           00056     RETFIE
+                      00057    
+                      00058 ;MAIN CODE
+                      00059       org 0x60      
+0060                  00060 MAIN_INIT:
+0060   1683 1303      00061     BANKSEL OSCCON
+0062   3067           00062     MOVLW b'01100111'
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0053   008F           00059     MOVWF OSCCON
-                      00060     
-0054   1683 1703      00061     BANKSEL ANSEL   ;BANK3
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0056   0188           00062     CLRF ANSEL
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0057   0189           00063     CLRF ANSELH
+0063   008F           00063     MOVWF OSCCON
                       00064     
-0058   1683 1303      00065     BANKSEL TRISD   ;BANK1
+0064   1683 1703      00065     BANKSEL ANSEL   ;BANK3
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-005A   0188           00066     CLRF TRISD
-                      00067     
-                      00068     ;timer0 setup
+0066   0188           00066     CLRF ANSEL
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-005B   1281           00069     BCF OPTION_REG,5
+0067   0189           00067     CLRF ANSELH
+                      00068     
+0068   1683 1303      00069     BANKSEL TRISD   ;BANK1
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-005C   1181           00070     BCF OPTION_REG,3
+006A   0188           00070     CLRF TRISD
+                      00071     
+                      00072     ;timer0 setup
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-005D   1401           00071     BSF OPTION_REG,0
+006B   1281           00073     BCF OPTION_REG,5
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-005E   1481           00072     BSF OPTION_REG,1
+006C   1181           00074     BCF OPTION_REG,3
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-005F   1501           00073     BSF OPTION_REG,2    ;256 PCS
-                      00074     
-0060   178B           00075     BSF INTCON,7    ;ENABLE GIE
-0061   168B           00076     BSF INTCON,5    ;OVF IE ENABLE FOR TMR0
-                      00077     
-0062   1283 1303      00078     BANKSEL PORTD
-0064   0181           00079     CLRF TMR0
-0065   01F2           00080     CLRF COUNTvar   ;we will use this address to save the OVF
-0066   0188           00081     CLRF PORTD
-0067                  00082 MAIN_LOOP:
-                      00083     
-0067   2???           00084     GOTO    MAIN_LOOP
-Warning[205]: Found directive in column 1. (END)
-MPASM 5.68                          MAIN.ASM   3-18-2026  0:00:31         PAGE  3
+006D   1401           00075     BSF OPTION_REG,0
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+006E   1481           00076     BSF OPTION_REG,1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+006F   1501           00077     BSF OPTION_REG,2    ;256 PCS
+                      00078     
+0070   178B           00079     BSF INTCON,7    ;ENABLE GIE
+0071   168B           00080     BSF INTCON,5    ;OVF IE ENABLE FOR TMR0
+                      00081     
+0072   1283 1303      00082     BANKSEL PORTD
+0074   0181           00083     CLRF TMR0
+MPASM 5.68                          MAIN.ASM   3-18-2026  16:42:37         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-2FF4 3FFF             00085 END
-MPASM 5.68                          MAIN.ASM   3-18-2026  0:00:31         PAGE  4
+0075   01F2           00084     CLRF COUNTvar   ;we will use this address to save the OVF
+0076   0188           00085     CLRF PORTD
+0077   01F3           00086     CLRF LED_POS
+0078                  00087 MAIN_LOOP:
+                      00088     
+0078   2???           00089     GOTO    MAIN_LOOP
+Warning[205]: Found directive in column 1. (END)
+2FE4 3FFF             00090 END
+MPASM 5.68                          MAIN.ASM   3-18-2026  16:42:37         PAGE  4
 
 
 SYMBOL TABLE
@@ -182,7 +189,7 @@ BRG6                              00000006
 BRG7                              00000007
 BRG8                              00000000
 BRG9                              00000001
-MPASM 5.68                          MAIN.ASM   3-18-2026  0:00:31         PAGE  5
+MPASM 5.68                          MAIN.ASM   3-18-2026  16:42:37         PAGE  5
 
 
 SYMBOL TABLE
@@ -241,7 +248,7 @@ CHS0                              00000002
 CHS1                              00000003
 CHS2                              00000004
 CHS3                              00000005
-MPASM 5.68                          MAIN.ASM   3-18-2026  0:00:31         PAGE  6
+MPASM 5.68                          MAIN.ASM   3-18-2026  16:42:37         PAGE  6
 
 
 SYMBOL TABLE
@@ -300,7 +307,7 @@ INTEDG                            00000006
 INTF                              00000001
 IOCB                              00000096
 IOCB0                             00000000
-MPASM 5.68                          MAIN.ASM   3-18-2026  0:00:31         PAGE  7
+MPASM 5.68                          MAIN.ASM   3-18-2026  16:42:37         PAGE  7
 
 
 SYMBOL TABLE
@@ -317,11 +324,12 @@ IRCF0                             00000004
 IRCF1                             00000005
 IRCF2                             00000006
 IRP                               00000007
-ISR_EXIT                          00000017
-LED_PATTERN                       0000000D
+ISR_EXIT                          0000001D
+LED_PATTERN                       00000013
+LED_POS                           00000073
 LTS                               00000001
-MAIN_INIT                         00000050
-MAIN_LOOP                         00000067
+MAIN_INIT                         00000060
+MAIN_LOOP                         00000078
 MC1OUT                            00000007
 MC2OUT                            00000006
 MSK                               00000093
@@ -358,13 +366,13 @@ P                                 00000004
 P1M0                              00000006
 P1M1                              00000007
 PCL                               00000002
-PCLATH                            0000000A
-MPASM 5.68                          MAIN.ASM   3-18-2026  0:00:31         PAGE  8
+MPASM 5.68                          MAIN.ASM   3-18-2026  16:42:37         PAGE  8
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+PCLATH                            0000000A
 PCON                              0000008E
 PDC0                              00000000
 PDC1                              00000001
@@ -417,13 +425,13 @@ RB6                               00000006
 RB7                               00000007
 RBIE                              00000003
 RBIF                              00000000
-RC0                               00000000
-MPASM 5.68                          MAIN.ASM   3-18-2026  0:00:31         PAGE  9
+MPASM 5.68                          MAIN.ASM   3-18-2026  16:42:37         PAGE  9
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RC0                               00000000
 RC1                               00000001
 RC2                               00000002
 RC3                               00000003
@@ -476,13 +484,13 @@ SR1                               00000007
 SRCON                             00000185
 SREN                              00000005
 SSPADD                            00000093
-SSPBUF                            00000013
-MPASM 5.68                          MAIN.ASM   3-18-2026  0:00:31         PAGE 10
+MPASM 5.68                          MAIN.ASM   3-18-2026  16:42:37         PAGE 10
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+SSPBUF                            00000013
 SSPCON                            00000014
 SSPCON2                           00000091
 SSPEN                             00000005
@@ -535,13 +543,13 @@ TMR2                              00000011
 TMR2IE                            00000001
 TMR2IF                            00000001
 TMR2ON                            00000002
-TOUTPS0                           00000003
-MPASM 5.68                          MAIN.ASM   3-18-2026  0:00:31         PAGE 11
+MPASM 5.68                          MAIN.ASM   3-18-2026  16:42:37         PAGE 11
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+TOUTPS0                           00000003
 TOUTPS1                           00000004
 TOUTPS2                           00000005
 TOUTPS3                           00000006
@@ -594,13 +602,13 @@ TUN3                              00000003
 TUN4                              00000004
 TX8_9                             00000006
 TX9                               00000006
-TX9D                              00000000
-MPASM 5.68                          MAIN.ASM   3-18-2026  0:00:31         PAGE 12
+MPASM 5.68                          MAIN.ASM   3-18-2026  16:42:37         PAGE 12
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+TX9D                              00000000
 TXD8                              00000000
 TXEN                              00000005
 TXIE                              00000004
@@ -653,13 +661,13 @@ _BOREN_OFF                        00003CFF
 _BOREN_ON                         00003FFF
 _BOREN_SBODEN                     00003DFF
 _BOR_NSLEEP                       00003EFF
-_BOR_OFF                          00003CFF
-MPASM 5.68                          MAIN.ASM   3-18-2026  0:00:31         PAGE 13
+MPASM 5.68                          MAIN.ASM   3-18-2026  16:42:37         PAGE 13
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+_BOR_OFF                          00003CFF
 _BOR_ON                           00003FFF
 _BOR_SBODEN                       00003DFF
 _CONFIG1                          00002007
@@ -712,17 +720,17 @@ _WRT_1FOURTH                      00003BFF
 _WRT_256                          00003DFF
 _WRT_HALF                         000039FF
 _WRT_OFF                          00003FFF
-_XT_OSC                           00003FF9
-MPASM 5.68                          MAIN.ASM   3-18-2026  0:00:31         PAGE 14
+MPASM 5.68                          MAIN.ASM   3-18-2026  16:42:37         PAGE 14
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+_XT_OSC                           00003FF9
 __16F887                          00000001
 
 Errors   :     0
-Warnings :     2 reported,     0 suppressed
+Warnings :     4 reported,     0 suppressed
 Messages :     9 reported,     0 suppressed
 
 
