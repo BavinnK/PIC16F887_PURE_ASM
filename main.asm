@@ -16,45 +16,6 @@ CBLOCK 0x70
     GOTO    MAIN_INIT
 ;INTERRUPT VECTOR
     ORG	    0x04
-    ;SWAPPING THE STATUS AND WROKING REGISTERS
-    MOVWF W_TEMP
-    SWAPF STATUS,W
-    MOVWF S_TEMP
-    ;DONE WITH SWAP
-    
-    BCF INTCON,2    ;CLR OVF FLAG MANUALLY
-    INCF COUNTvar,F
-    MOVF LED_SPEED,W
-    SUBWF COUNTvar,W
-    BTFSS STATUS,2
-    GOTO ISR_EXIT
-    CLRF COUNTvar
-    INCF LED_POS,F
-    MOVF LED_POS,W
-    CALL LED_PATTERN
-    MOVWF PORTD
-    GOTO ISR_EXIT
-
-LED_PATTERN:
-    ANDLW 0x7	    ;so we will and the data in W reg with number 7 so the led would be between 0-7
-    ADDWF PCL,F	    ;then we will add PCL AND Wreg data so depending on the data in Wreg the PCL will jump to one of the patterns
-    RETLW b'00000001'	;if W is 0
-    RETLW b'00000010'	;if W is 1
-    RETLW b'00000100'	;if W is 2
-    RETLW b'00001000'	;if W is 3
-    RETLW b'00010000'	;if W is 4
-    RETLW b'00100000'	;if W is 5
-    RETLW b'01000000'	;if W is 6
-    RETLW b'10000000'	;if W is 7
-    
-    
-    
-ISR_EXIT:
-    SWAPF S_TEMP,W
-    MOVWF STATUS
-    SWAPF W_TEMP,F
-    SWAPF W_TEMP,W
-    RETFIE
    
 ;MAIN CODE
       org 0x60      
@@ -66,25 +27,18 @@ MAIN_INIT:
     BANKSEL ANSEL   ;BANK3
     CLRF ANSEL
     CLRF ANSELH
+    ;TIMER 2 SETUP
+    BANKSEL TRISC   ;BANK2
+    BCF TRISC,2	    ;set RC2 as output
+    MOVLW h'ff'
+    MOVWF PR2
     
-    BANKSEL TRISD   ;BANK1
-    CLRF TRISD
+    BANKSEL CCP1CON ;BANK1
+    MOVLW b'00001100'	;PWM MODE, SINGLE OUTPUT
+    MOVWF CCP1CON
     
-    ;timer0 setup
-    BCF OPTION_REG,5
-    BCF OPTION_REG,3
-    BCF OPTION_REG,0
-    BCF OPTION_REG,1
-    BCF OPTION_REG,2	
-    
-    BSF INTCON,7    ;ENABLE GIE
-    BSF INTCON,5    ;OVF IE ENABLE FOR TMR0
-    
-    BANKSEL PORTD
-    CLRF TMR0
-    CLRF COUNTvar   ;we will use this address to save the OVF
-    CLRF PORTD
-    CLRF LED_POS
+    BANKSEL T2CON
+    BSF T2CON,2	    ;TURN TMR2 ON
     
     ;ADC setup
     BANKSEL TRISA
@@ -124,7 +78,7 @@ AN0_WAIT:
     BTFSC ADCON0,1
     GOTO AN0_WAIT
     MOVF ADRESH,W
-    MOVWF LED_SPEED
+    MOVWF CCPR1L
     RETURN
     
 END
