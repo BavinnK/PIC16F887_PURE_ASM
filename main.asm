@@ -21,6 +21,7 @@ MAIN_INIT:
     BANKSEL ANSEL   ;BANK3
     CLRF ANSEL
     CLRF ANSELH
+    
     ;TIMER 2 SETUP
     BANKSEL TRISC   ;BANK1
     BCF TRISC,2	    ;set RC2 as output
@@ -31,6 +32,7 @@ MAIN_INIT:
     MOVLW b'00001100'	;PWM MODE, SINGLE OUTPUT
     MOVWF CCP1CON
     BSF T2CON,2	    ;TURN TMR2 ON
+    ;TIMER2 END
     
     ;ADC setup
     BANKSEL TRISA
@@ -45,6 +47,28 @@ MAIN_INIT:
     MOVLW b'01000001'
     MOVWF ADCON0
     CALL DELAY_10US
+    ;ADC END
+    
+    ;EUSART setup
+    BANKSEL TRISC   ;BANK1
+    BCF TRISC,6
+    BCF TXSTA,6	    ;8bit transmission
+    BCF TXSTA,4	    ;Asynchronous mode
+    BSF TXSTA,2	    ;HIGH SPEED
+    
+    BANKSEL RCSTA   ;BANK0
+    BSF RCSTA,7	    ;configures RX/DT and TX/CK pins as serial port pins
+    BANKSEL SPBRG   ;BANK1
+    MOVLW d'25'	    ;depending on the config of the EUSART u can find the values in the datasheet
+    MOVWF SPBRG
+    
+    BANKSEL BAUDCTL ;BANK3
+    BCF BAUDCTL,3   ;8-bit Baud Rate Generator is used, now the baudrate is 9615
+    
+    BANKSEL TXSTA   ;BANK1
+    BSF TXSTA,5	    ;transmitter enabled
+    ;EUSART END
+    
     GOTO MAIN_LOOP
     
 MAIN_LOOP:
