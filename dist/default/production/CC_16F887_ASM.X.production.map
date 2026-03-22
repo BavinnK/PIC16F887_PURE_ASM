@@ -1,12 +1,12 @@
 MPLINK 5.08, LINKER
-Linker Map File - Created Thu Mar 19 21:02:06 2026
+Linker Map File - Created Sun Mar 22 19:27:04 2026
 
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
                 ---------  ---------  ---------  ---------  ---------
                    .org_0       code   0x000000    program   0x000002
                    .cinit    romdata   0x000001    program   0x000004
-                   .org_2       code   0x000060    program   0x000074
+                   .org_2       code   0x000060    program   0x000070
 .config_2007_BUILD/DEFAULT/PRODUCTION/MAIN.O       code   0x002007    program   0x000002
 .config_2008_BUILD/DEFAULT/PRODUCTION/MAIN.O       code   0x002008    program   0x000002
 
@@ -16,19 +16,19 @@ Linker Map File - Created Thu Mar 19 21:02:06 2026
                                Start         End      
                            ---------   ---------      
                             0x000000    0x000002      
-                            0x000060    0x000099      
+                            0x000060    0x000097      
                             0x002007    0x002008      
-            63 out of 8455 program addresses used, program memory utilization is 0%
+            61 out of 8455 program addresses used, program memory utilization is 0%
 
 
 
                               Symbols - Sorted by Name
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
-                 AN0_WAIT   0x000095    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
-               DELAY_10US   0x00008a    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
+                 AN0_WAIT   0x000093    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
+               DELAY_10US   0x000088    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
                 MAIN_INIT   0x000060    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
-                MAIN_LOOP   0x000085    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
+                MAIN_LOOP   0x000083    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
 
 
 
@@ -36,8 +36,8 @@ Linker Map File - Created Thu Mar 19 21:02:06 2026
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
                 MAIN_INIT   0x000060    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
-                MAIN_LOOP   0x000085    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
-               DELAY_10US   0x00008a    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
-                 AN0_WAIT   0x000095    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
+                MAIN_LOOP   0x000083    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
+               DELAY_10US   0x000088    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
+                 AN0_WAIT   0x000093    program     static C:\Users\Bavin\MPLABXProjects\CC_16F887_ASM.X\main.asm
 
 
