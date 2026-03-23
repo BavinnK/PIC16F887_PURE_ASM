@@ -12,7 +12,7 @@ ENDC
     GOTO    MAIN_INIT
 ;INTERRUPT VECTOR
     ORG	    0x04
-   
+    RETFIE
 ;MAIN CODE
       org 0x60      
 MAIN_INIT:
@@ -53,7 +53,8 @@ MAIN_INIT:
     
     ;EUSART setup
     BANKSEL TRISC   ;BANK1
-    BCF TRISC,6
+    BSF TRISC,6
+    BSF TRISC,7
     BCF TXSTA,6	    ;8bit transmission
     BCF TXSTA,4	    ;Asynchronous mode
     BSF TXSTA,2	    ;HIGH SPEED
@@ -77,6 +78,7 @@ MAIN_LOOP:
     BANKSEL ADCON0
     BSF ADCON0,1
     CALL AN0_WAIT
+    CALL DELAY_10US
     CALL EUSART_WAIT
     
     GOTO MAIN_LOOP

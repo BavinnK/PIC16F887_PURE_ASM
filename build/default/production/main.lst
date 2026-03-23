@@ -1,4 +1,4 @@
-MPASM 5.68                          MAIN.ASM   3-22-2026  20:27:29         PAGE  1
+MPASM 5.68                          MAIN.ASM   3-23-2026  21:30:03         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -32,7 +32,7 @@ Warning[205]: Found directive in column 1. (ENDC)
 0000   2???           00012     GOTO    MAIN_INIT
                       00013 ;INTERRUPT VECTOR
                       00014     ORG     0x04
-                      00015    
+0004   0009           00015     RETFIE
                       00016 ;MAIN CODE
                       00017       org 0x60      
 0060                  00018 MAIN_INIT:
@@ -57,7 +57,7 @@ Message[302]: Register in operand not in bank 0.  Ensure that bank bits are corr
                       00032     
 006D   1283 1303      00033     BANKSEL CCP1CON ;BANK0
 006F   300C           00034     MOVLW b'00001100'   ;PWM MODE, SINGLE OUTPUT
-MPASM 5.68                          MAIN.ASM   3-22-2026  20:27:29         PAGE  2
+MPASM 5.68                          MAIN.ASM   3-23-2026  21:30:03         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -90,49 +90,50 @@ Message[302]: Register in operand not in bank 0.  Ensure that bank bits are corr
                       00054     ;EUSART setup
 0082   1683 1303      00055     BANKSEL TRISC   ;BANK1
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0084   1307           00056     BCF TRISC,6
+0084   1707           00056     BSF TRISC,6
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0085   1318           00057     BCF TXSTA,6     ;8bit transmission
+0085   1787           00057     BSF TRISC,7
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0086   1218           00058     BCF TXSTA,4     ;Asynchronous mode
+0086   1318           00058     BCF TXSTA,6     ;8bit transmission
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0087   1518           00059     BSF TXSTA,2     ;HIGH SPEED
-                      00060     
-0088   1283 1303      00061     BANKSEL RCSTA   ;BANK0
-008A   1798           00062     BSF RCSTA,7     ;configures RX/DT and TX/CK pins as serial port pins
-008B   1683 1303      00063     BANKSEL SPBRG   ;BANK1
-008D   3019           00064     MOVLW d'25'     ;depending on the config of the EUSART u can find the values in the datasheet
+0087   1218           00059     BCF TXSTA,4     ;Asynchronous mode
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-008E   0099           00065     MOVWF SPBRG
-                      00066     
-008F   1683 1703      00067     BANKSEL BAUDCTL ;BANK3
+0088   1518           00060     BSF TXSTA,2     ;HIGH SPEED
+                      00061     
+0089   1283 1303      00062     BANKSEL RCSTA   ;BANK0
+008B   1798           00063     BSF RCSTA,7     ;configures RX/DT and TX/CK pins as serial port pins
+008C   1683 1303      00064     BANKSEL SPBRG   ;BANK1
+008E   3019           00065     MOVLW d'25'     ;depending on the config of the EUSART u can find the values in the datasheet
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0091   1187           00068     BCF BAUDCTL,3   ;8-bit Baud Rate Generator is used, now the baudrate is 9615
-                      00069     
-0092   1683 1303      00070     BANKSEL TXSTA   ;BANK1
+008F   0099           00066     MOVWF SPBRG
+                      00067     
+0090   1683 1703      00068     BANKSEL BAUDCTL ;BANK3
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0094   1698           00071     BSF TXSTA,5     ;transmitter enabled
-                      00072     ;EUSART END
-                      00073     
-0095   2???           00074     GOTO MAIN_LOOP
-                      00075     
-MPASM 5.68                          MAIN.ASM   3-22-2026  20:27:29         PAGE  3
+0092   1187           00069     BCF BAUDCTL,3   ;8-bit Baud Rate Generator is used, now the baudrate is 9615
+                      00070     
+0093   1683 1303      00071     BANKSEL TXSTA   ;BANK1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0095   1698           00072     BSF TXSTA,5     ;transmitter enabled
+                      00073     ;EUSART END
+                      00074     
+MPASM 5.68                          MAIN.ASM   3-23-2026  21:30:03         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0096                  00076 MAIN_LOOP:
-0096   1283 1303      00077     BANKSEL ADCON0
-0098   149F           00078     BSF ADCON0,1
-0099   2???           00079     CALL AN0_WAIT
-009A   2???           00080     CALL EUSART_WAIT
-                      00081     
-009B   2???           00082     GOTO MAIN_LOOP
+0096   2???           00075     GOTO MAIN_LOOP
+                      00076     
+0097                  00077 MAIN_LOOP:
+0097   1283 1303      00078     BANKSEL ADCON0
+0099   149F           00079     BSF ADCON0,1
+009A   2???           00080     CALL AN0_WAIT
+009B   2???           00081     CALL DELAY_10US
+009C   2???           00082     CALL EUSART_WAIT
                       00083     
-009C                  00084 DELAY_10US:;;SIMPLE 10US DELAY
-009C   0000           00085     NOP
-009D   0000           00086     NOP
+009D   2???           00084     GOTO MAIN_LOOP
+                      00085     
+009E                  00086 DELAY_10US:;;SIMPLE 10US DELAY
 009E   0000           00087     NOP
 009F   0000           00088     NOP
 00A0   0000           00089     NOP
@@ -141,30 +142,32 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 00A3   0000           00092     NOP
 00A4   0000           00093     NOP
 00A5   0000           00094     NOP
-00A6   0008           00095     RETURN
-                      00096     
-00A7                  00097 AN0_WAIT:
-00A7   1283 1303      00098     BANKSEL ADCON0   ;BANK0
-00A9   189F           00099     BTFSC ADCON0,1
-00AA   2???           00100     GOTO AN0_WAIT
-00AB   081E           00101     MOVF ADRESH,W
-00AC   00F0           00102     MOVWF ADC_DATA
-00AD   0095           00103     MOVWF CCPR1L
-00AE   0008           00104     RETURN
-                      00105     
-00AF                  00106 EUSART_WAIT:
-00AF   1283 1303      00107     BANKSEL PIR1
-00B1   1E0C           00108     BTFSS PIR1,4
-00B2   2???           00109     GOTO EUSART_WAIT
-00B3   1283 1303      00110     BANKSEL TXREG
-00B5   0870           00111     MOVF ADC_DATA,W
-00B6   0099           00112     MOVWF TXREG
-                      00113     
-                      00114     
-00B7   0008           00115     RETURN
+00A6   0000           00095     NOP
+00A7   0000           00096     NOP
+00A8   0008           00097     RETURN
+                      00098     
+00A9                  00099 AN0_WAIT:
+00A9   1283 1303      00100     BANKSEL ADCON0   ;BANK0
+00AB   189F           00101     BTFSC ADCON0,1
+00AC   2???           00102     GOTO AN0_WAIT
+00AD   081E           00103     MOVF ADRESH,W
+00AE   00F0           00104     MOVWF ADC_DATA
+00AF   0095           00105     MOVWF CCPR1L
+00B0   0008           00106     RETURN
+                      00107     
+00B1                  00108 EUSART_WAIT:
+00B1   1283 1303      00109     BANKSEL PIR1
+00B3   1E0C           00110     BTFSS PIR1,4
+00B4   2???           00111     GOTO EUSART_WAIT
+00B5   1283 1303      00112     BANKSEL TXREG
+00B7   0870           00113     MOVF ADC_DATA,W
+00B8   0099           00114     MOVWF TXREG
+                      00115     
+                      00116     
+00B9   0008           00117     RETURN
 Warning[205]: Found directive in column 1. (END)
-2FF4 3FFF             00116 END
-MPASM 5.68                          MAIN.ASM   3-22-2026  20:27:29         PAGE  4
+2FF4 3FFF             00118 END
+MPASM 5.68                          MAIN.ASM   3-23-2026  21:30:03         PAGE  4
 
 
 SYMBOL TABLE
@@ -187,7 +190,7 @@ ADIF                              00000006
 ADON                              00000000
 ADRESH                            0000001E
 ADRESL                            0000009E
-AN0_WAIT                          000000A7
+AN0_WAIT                          000000A9
 ANS0                              00000000
 ANS1                              00000001
 ANS10                             00000002
@@ -223,7 +226,7 @@ BRG4                              00000004
 BRG5                              00000005
 BRG6                              00000006
 BRG7                              00000007
-MPASM 5.68                          MAIN.ASM   3-22-2026  20:27:29         PAGE  5
+MPASM 5.68                          MAIN.ASM   3-23-2026  21:30:03         PAGE  5
 
 
 SYMBOL TABLE
@@ -282,7 +285,7 @@ CCPR2H                            0000001C
 CCPR2L                            0000001B
 CHS0                              00000002
 CHS1                              00000003
-MPASM 5.68                          MAIN.ASM   3-22-2026  20:27:29         PAGE  6
+MPASM 5.68                          MAIN.ASM   3-23-2026  21:30:03         PAGE  6
 
 
 SYMBOL TABLE
@@ -304,7 +307,7 @@ DC1B0                             00000004
 DC1B1                             00000005
 DC2B0                             00000004
 DC2B1                             00000005
-DELAY_10US                        0000009C
+DELAY_10US                        0000009E
 D_A                               00000005
 D_NOT_A                           00000005
 ECCPAS                            0000009C
@@ -322,7 +325,7 @@ EEDATH                            0000010E
 EEIE                              00000004
 EEIF                              00000004
 EEPGD                             00000007
-EUSART_WAIT                       000000AF
+EUSART_WAIT                       000000B1
 F                                 00000001
 FERR                              00000002
 FSR                               00000004
@@ -341,7 +344,7 @@ INDF                              00000000
 INTCON                            0000000B
 INTE                              00000004
 INTEDG                            00000006
-MPASM 5.68                          MAIN.ASM   3-22-2026  20:27:29         PAGE  7
+MPASM 5.68                          MAIN.ASM   3-23-2026  21:30:03         PAGE  7
 
 
 SYMBOL TABLE
@@ -363,7 +366,7 @@ IRCF2                             00000006
 IRP                               00000007
 LTS                               00000001
 MAIN_INIT                         00000060
-MAIN_LOOP                         00000096
+MAIN_LOOP                         00000097
 MC1OUT                            00000007
 MC2OUT                            00000006
 MSK                               00000093
@@ -400,7 +403,7 @@ P                                 00000004
 P1M0                              00000006
 P1M1                              00000007
 PCL                               00000002
-MPASM 5.68                          MAIN.ASM   3-22-2026  20:27:29         PAGE  8
+MPASM 5.68                          MAIN.ASM   3-23-2026  21:30:03         PAGE  8
 
 
 SYMBOL TABLE
@@ -459,7 +462,7 @@ RB6                               00000006
 RB7                               00000007
 RBIE                              00000003
 RBIF                              00000000
-MPASM 5.68                          MAIN.ASM   3-22-2026  20:27:29         PAGE  9
+MPASM 5.68                          MAIN.ASM   3-23-2026  21:30:03         PAGE  9
 
 
 SYMBOL TABLE
@@ -518,7 +521,7 @@ SR1                               00000007
 SRCON                             00000185
 SREN                              00000005
 SSPADD                            00000093
-MPASM 5.68                          MAIN.ASM   3-22-2026  20:27:29         PAGE 10
+MPASM 5.68                          MAIN.ASM   3-23-2026  21:30:03         PAGE 10
 
 
 SYMBOL TABLE
@@ -577,7 +580,7 @@ TMR2IE                            00000001
 TMR2IF                            00000001
 TMR2ON                            00000002
 TOUTPS0                           00000003
-MPASM 5.68                          MAIN.ASM   3-22-2026  20:27:29         PAGE 11
+MPASM 5.68                          MAIN.ASM   3-23-2026  21:30:03         PAGE 11
 
 
 SYMBOL TABLE
@@ -636,7 +639,7 @@ TUN4                              00000004
 TX8_9                             00000006
 TX9                               00000006
 TX9D                              00000000
-MPASM 5.68                          MAIN.ASM   3-22-2026  20:27:29         PAGE 12
+MPASM 5.68                          MAIN.ASM   3-23-2026  21:30:03         PAGE 12
 
 
 SYMBOL TABLE
@@ -695,7 +698,7 @@ _BOREN_SBODEN                     00003DFF
 _BOR_NSLEEP                       00003EFF
 _BOR_OFF                          00003CFF
 _BOR_ON                           00003FFF
-MPASM 5.68                          MAIN.ASM   3-22-2026  20:27:29         PAGE 13
+MPASM 5.68                          MAIN.ASM   3-23-2026  21:30:03         PAGE 13
 
 
 SYMBOL TABLE
@@ -754,7 +757,7 @@ _WRT_HALF                         000039FF
 _WRT_OFF                          00003FFF
 _XT_OSC                           00003FF9
 __16F887                          00000001
-MPASM 5.68                          MAIN.ASM   3-22-2026  20:27:29         PAGE 14
+MPASM 5.68                          MAIN.ASM   3-23-2026  21:30:03         PAGE 14
 
 
 
@@ -763,6 +766,6 @@ __16F887                          00000001
 
 Errors   :     0
 Warnings :     5 reported,     0 suppressed
-Messages :    17 reported,     0 suppressed
+Messages :    18 reported,     0 suppressed
 
 
